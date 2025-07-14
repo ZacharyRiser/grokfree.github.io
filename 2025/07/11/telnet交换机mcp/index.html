@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>从命令行到认知智能：基于cisco-mcp的AIOps深度实践 | Zachary个人博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="基于前一次的实践，这次的cisco交换机ai也能绘制出以交换机为中心的网络拓扑图！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从命令行到认知智能：基于cisco-mcp的AIOps深度实践">
+<meta property="og:url" content="https://www.grokfree.xyz/2025/07/11/telnet%E4%BA%A4%E6%8D%A2%E6%9C%BAmcp/index.html">
+<meta property="og:site_name" content="Zachary个人博客">
+<meta property="og:description" content="基于前一次的实践，这次的cisco交换机ai也能绘制出以交换机为中心的网络拓扑图！">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.grokfree.xyz/images/%E4%BA%A4%E6%8D%A2%E6%9C%BA3.jpg">
+<meta property="og:image" content="https://www.grokfree.xyz/images/cisco1.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/cisco2.1.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/cisco2.2.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/cisco3.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/O1%E6%83%9C%E8%B4%A5.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/deepseek%E5%8F%8D%E5%A4%8D.png">
+<meta property="og:image" content="https://www.grokfree.xyz/images/deepseek%E7%BB%93%E6%9E%9C.png">
+<meta property="article:published_time" content="2025-07-11T02:30:00.000Z">
+<meta property="article:modified_time" content="2025-07-14T01:51:49.252Z">
+<meta property="article:author" content="Zachary">
+<meta property="article:tag" content="AIOps">
+<meta property="article:tag" content="网络运维">
+<meta property="article:tag" content="Cisco">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="提示词工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.grokfree.xyz/images/%E4%BA%A4%E6%8D%A2%E6%9C%BA3.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Zachary个人博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Zachary个人博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.grokfree.xyz"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-telnet交换机mcp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/07/11/telnet%E4%BA%A4%E6%8D%A2%E6%9C%BAmcp/" class="article-date">
+  <time class="dt-published" datetime="2025-07-11T02:30:00.000Z" itemprop="datePublished">2025-07-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">技术实践</a>►<a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/AIOps/">AIOps</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      从命令行到认知智能：基于cisco-mcp的AIOps深度实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>基于前一次的实践，这次的cisco交换机ai也能绘制出以交换机为中心的网络拓扑图！</p>
+<span id="more"></span>
+
+<p><img src="/images/%E4%BA%A4%E6%8D%A2%E6%9C%BA3.jpg" alt="交换机3"></p>
+<p>近期的科技圈，无疑被Grok-4等新一代大模型的发布信息所席卷。这些拥有超长上下文、多模态能力的“巨兽”让人无限遐想。然而，在追逐星辰大海的同时，一个更实际的问题摆在每个技术人面前：我们能否利用<strong>当下可用</strong>的技术，解决<strong>眼前真实</strong>的问题？</p>
+<p>答案是肯定的。</p>
+<p>在上一篇文章中，我们让AI小试牛刀，绘制了网络拓扑图。今天，我们将进行一次“终极考验”：不依赖尚未落地的未来模型，仅通过对现有开源模型的精湛“调教”——即高阶提示词工程，将一个通用AI彻底改造为能够自主进行端到端故障排查的Cisco网络专家。</p>
+<h2 id="一、部署cisco-mcp服务"><a href="#一、部署cisco-mcp服务" class="headerlink" title="一、部署cisco-mcp服务"></a>一、部署cisco-mcp服务</h2><p>相较于上一篇实践中部署<code>ssh-mcp-server</code>时遇到的编译挑战，本次部署<code>wzfukui/cisco-mcp</code>项目的过程则显得格外顺畅。<code>cisco-mcp</code>是一个专为管理Cisco设备（支持Telnet&#x2F;SSH）而生的Node.js MCP服务器，其部署流程充分体现了标准化Node.js项目的便捷性。</p>
+<h3 id="1-部署安装：三步走的标准流程"><a href="#1-部署安装：三步走的标准流程" class="headerlink" title="1. 部署安装：三步走的标准流程"></a>1. 部署安装：三步走的标准流程</h3><p>整个安装过程遵循GitHub项目<code>README</code>的指引，与大多数Node.js应用别无二致：</p>
+<p><strong>第一步：克隆项目仓库</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/wzfukui/cisco-mcp.git</span><br><span class="line"><span class="built_in">cd</span> cisco-mcp</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二步：安装项目依赖</strong><br>这一步通过Node.js的包管理器npm，自动下载并安装项目所需的所有库文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>与上次实践需要手动修改TypeScript代码来解决编译错误不同，<code>cisco-mcp</code>项目的依赖管理非常完善，<code>npm install</code>命令一次性成功，没有遇到任何兼容性问题。</p>
+<p><strong>第三步：构建项目（如果需要）</strong><br>许多TypeScript项目需要一个构建步骤（<code>npm run build</code>）来将<code>.ts</code>源文件编译成JavaScript的<code>.js</code>文件。不过，<code>cisco-mcp</code>项目经过良好封装，可以直接通过<code>node</code>命令运行其主入口文件，省去了这一环节，进一步简化了部署。</p>
+<h3 id="2-核心配置：定义你的设备版图"><a href="#2-核心配置：定义你的设备版图" class="headerlink" title="2. 核心配置：定义你的设备版图"></a>2. 核心配置：定义你的设备版图</h3><p>部署成功的关键，在于如何让服务正确地“认识”并连接到我们的设备。这主要通过两个配置文件来完成。</p>
+<p><strong>配置文件一：设备清单 <code>cisco-devices.json</code></strong><br>这是整个服务能够工作的“设备名册”。我们需要在项目根目录下创建一个名为<code>cisco-devices.json</code>的文件，在里面以JSON格式定义所有需要被AI管理的Cisco设备。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;alias&quot;</span><span class="punctuation">:</span> <span class="string">&quot;my-core-switch&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;192.168.4.14&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;telnet&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;username&quot;</span><span class="punctuation">:</span> <span class="string">&quot;admin&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your_password&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;enablePassword&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your_enable_password&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;公司核心交换机&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+<p>这个文件至关重要，其中<code>alias</code>（别名）是后续我们与AI交互时识别设备的唯一ID。AI会根据这个别名自动查找对应的IP、协议和凭证去连接设备。</p>
+<p><strong>配置文件二：在AI工作台注册MCP服务</strong><br>最后一步，是将这个本地服务注册到我们的AI工作台（如Cherry Studio），使其能被AI模型发现和调用。根据我提供的截图，配置如下：</p>
+<ul>
+<li><strong>名称:</strong> <code>cisco-mcp</code></li>
+<li><strong>描述:</strong> 通过 Telnet&#x2F;SSH 管理 Cisco 交换机的 MCP 服务器</li>
+<li><strong>类型:</strong> 标准输入&#x2F;输出 (stdio)</li>
+<li><strong>命令:</strong> <code>node</code></li>
+<li><strong>参数:</strong><ul>
+<li><code>C:\\xxx\\xxx\\cisco-mcp\\dist\\index.js</code> (指向Node.js启动脚本)</li>
+<li><code>C:\\xxx\\xxx\\cisco-mcp\\cisco-devices.json</code> (将设备清单作为第二个参数传入)</li>
+</ul>
+</li>
+</ul>
+<p>这个配置清晰地告诉系统：使用<code>node</code>环境去执行<code>index.js</code>脚本，并且在启动时加载<code>cisco-devices.json</code>这个配置文件。至此，AI与Cisco设备之间的“桥梁”就完全搭建好了。</p>
+<h3 id="3-部署挑战：从不确定到稳定"><a href="#3-部署挑战：从不确定到稳定" class="headerlink" title="3. 部署挑战：从不确定到稳定"></a>3. 部署挑战：从不确定到稳定</h3><p>尽管安装过程顺畅，但在初期测试中，我遇到了AI执行命令“时好时坏”，频繁报告<code>socket not writable</code>的连接错误。这通常意味着底层工具在尝试写入命令时连接已经失效。经过排查发现，这并非网络问题或部署错误，而是AI在调用工具时的策略不够稳定。这个挑战，也直接引出了AIOps实践中真正具有“含金量”的核心环节——提示词工程。</p>
+<h2 id="二、灵魂所在：高阶提示词工程的“含金量”"><a href="#二、灵魂所在：高阶提示词工程的“含金量”" class="headerlink" title="二、灵魂所在：高阶提示词工程的“含金量”"></a>二、灵魂所在：高阶提示词工程的“含金量”</h2><p>许多人可能会觉得，提示词（Prompt）不就是“跟AI说人话”吗？能有什么技术含量？这是一种普遍的误解。在专业的AIOps领域，提示词绝非简单的对话，它是一套为AI心智“编程”的精密指令集。一个优秀的提示词，是将一个“充满想象力”的通用大模型，改造为一个“严谨、精确、可靠”的领域专家的关键。</p>
+<p>我们的最终版提示词，正是“调教”的核心所在。让我们来拆解其“含金量”：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[ROLE AND GOAL]</span><br><span class="line">You are &#123;&#123;model_name&#125;&#125;, an AI-powered Senior Network Engineer, specializing in Cisco IOS and NX-OS environments... Your sole purpose is to assist... with the highest level of accuracy and professionalism.</span><br><span class="line"></span><br><span class="line">[RESPONSE LANGUAGE]</span><br><span class="line">You MUST respond to the user in Chinese.</span><br><span class="line"></span><br><span class="line">[CONTEXT AND ENVIRONMENT]</span><br><span class="line">Timestamp: &#123;&#123;datetime&#125;&#125;</span><br><span class="line">Operator: &#123;&#123;username&#125;&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><strong>含金量 1：设定专业“人格”与“边界”</strong></p>
+<ul>
+<li><strong>[ROLE AND GOAL]</strong>: 这不是简单的称呼，这是在为AI构建一个“人格面具”。它让AI后续所有的回答都潜移默化地带上“资深网工”的口吻和思考模式，比如会主动提出安全建议。</li>
+<li><strong>[RESPONSE LANGUAGE]</strong>: 强制中文输出，是基础的用户体验保障。</li>
+<li><strong>[CONTEXT AND ENVIRONMENT]</strong>: 注入用户名、时间等变量，让AI的回答更具个性化和情境感，感觉像一个专属助手。</li>
+</ul>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[OPERATIONAL PROTOCOL AND BEHAVIOR]</span><br><span class="line">1.  **Fact-Based Reporting (Zero Hallucination):** Your responses MUST be derived STRICTLY from the tool&#x27;s output... Never invent information.</span><br><span class="line">2.  **Structured &amp; Analytical Responses:** ...follow this three-step process: a. Briefly state... b. Summarize... c. Provide a short, expert-level insight or analysis.</span><br><span class="line">3.  **Intelligent Mode-Handling:** You must infer the required command mode...</span><br><span class="line">4.  **Communication Style:** ...Do not narrate the background connection process...</span><br><span class="line">5.  **Strict Execution Workflow:** ...your internal process MUST follow these steps: a. Acknowledge &amp; Verify... b. Execute with Precision... c. Analyze &amp; Report...</span><br></pre></td></tr></table></figure>
+<p><strong>含金量 2：植入“标准作业程序 (SOP)”</strong></p>
+<ul>
+<li><strong>[Fact-Based Reporting]</strong>: 这是AIOps的“安全红线”。我们用最严厉的词语（MUST, STRICTLY, Never）禁止了模型最臭名昭著的“幻觉”问题，确保了输出的绝对可靠。</li>
+<li><strong>[Structured &amp; Analytical Responses]</strong>: 这条指令将AI从“数据搬运工”提升为“情报分析师”。它强制AI不能只丢回原始数据，必须进行“总结+分析”两步操作，这直接提升了信息价值。</li>
+<li><strong>[Strict Execution Workflow]</strong>: 这是解决“时好时坏”问题的<strong>定海神针</strong>。它为AI定义了一个不可逾越的思考流程（确认目标 -&gt; 执行 -&gt; 分析），把AI的“随机应变”变成了可预测的“标准作业”，极大地增强了稳定性。</li>
+</ul>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[OPERATIONAL PROTOCOL AND BEHAVIOR]</span><br><span class="line">1.  **Fact-Based Reporting (Zero Hallucination):** Your responses MUST be derived STRICTLY from the tool&#x27;s output... Never invent information.</span><br><span class="line">2.  **Structured &amp; Analytical Responses:** ...follow this three-step process: a. Briefly state... b. Summarize... c. Provide a short, expert-level insight or analysis.</span><br><span class="line">3.  **Intelligent Mode-Handling:** You must infer the required command mode...</span><br><span class="line">4.  **Communication Style:** ...Do not narrate the background connection process...</span><br><span class="line">5.  **Strict Execution Workflow:** ...your internal process MUST follow these steps: a. Acknowledge &amp; Verify... b. Execute with Precision... c. Analyze &amp; Report...</span><br></pre></td></tr></table></figure>
+
+<p><strong>含金量 3：注入“专家排错逻辑”</strong></p>
+<ul>
+<li>这是整个提示词中最能体现“调教”功力的部分。我们没有让AI去猜测错误原因，而是将人类专家的排错经验，直接“编码”成了AI的行为模式。</li>
+<li><strong>[If Error is “Alias not found”]</strong>: 教会了AI“自我修正”。当路不通时，不是放弃，而是拿出地图（<code>list_available_devices</code>）给用户看。</li>
+<li><strong>[If Error is “socket not writable”]</strong>: 教会了AI“智能诊断”。它不再是一个复读机，而是能将技术性错误翻译成一个清晰、可操作的排错指南，这正是从工具到助手的质变。</li>
+</ul>
+<p>可以说，部署工具（<code>cisco-mcp</code>）解决了“能不能做”的问题，而这套高阶提示词，则决定了AI“能做得多好”、“多可靠”和“多智能”。</p>
+<h2 id="三、成果展示：从简单查询到智能诊断"><a href="#三、成果展示：从简单查询到智能诊断" class="headerlink" title="三、成果展示：从简单查询到智能诊断"></a>三、成果展示：从简单查询到智能诊断</h2><p>经过精细的提示词调优后，AI助手的表现稳定且专业。以下是实战交互案例，由浅入深地展示了其能力。</p>
+<h3 id="3-1-精确信息提取与结构化输出"><a href="#3-1-精确信息提取与结构化输出" class="headerlink" title="3.1 精确信息提取与结构化输出"></a>3.1 精确信息提取与结构化输出</h3><p>网络运维中，我们经常需要从大量的CLI输出中提取关键信息。我们测试AI是否能将原始文本转化为易读的结构化数据。</p>
+<p><strong>我的指令:</strong></p>
+<blockquote>
+<p>好的，清单已收到。现在请连接到别名为 <code>my-core-switch</code> 的设备，执行 <code>show ip interface brief</code> 命令，并告诉我所有接口的状态。</p>
+</blockquote>
+<p><img src="/images/cisco1.png" alt="cisco1"></p>
+<p><strong>AI的执行与分析:</strong></p>
+<blockquote>
+<p>我已在设备 <strong>my-core-switch</strong> 上执行了 <code>show ip interface brief</code> 命令，并汇总了所有接口的状态如下：</p>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>IP 地址</th>
+<th>OK?</th>
+<th>Method</th>
+<th>状态</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vlan1</td>
+<td>192.168.x.x</td>
+<td>YES</td>
+<td>manual</td>
+<td>up</td>
+<td>up</td>
+</tr>
+<tr>
+<td>Vlan22</td>
+<td>192.168.x.x</td>
+<td>YES</td>
+<td>NVRAM</td>
+<td>up</td>
+<td>up</td>
+</tr>
+<tr>
+<td>… (省略中间多行接口) …</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Port-channel2</td>
+<td>unassigned</td>
+<td>YES</td>
+<td>unset</td>
+<td>up</td>
+<td>up</td>
+</tr>
+</tbody></table>
+<p><strong>分析与建议：</strong></p>
+<ul>
+<li><strong>接口状态良好</strong>：所有接口的状态均为 <strong>up</strong>，表明它们均处于正常运行状态，没有检测到任何物理或协议层的问题。</li>
+<li><strong>IP 地址配置</strong>：VLAN 接口均已分配有效 IP 地址，确保了VLAN间的正常通信和路由功能。GigabitEthernet 和 Port-channel 接口显示为 unassigned，通常用于交换数据而非路由。</li>
+</ul>
+</blockquote>
+<p><strong>点评:</strong> 这是AIOps的核心价值体现之一。AI成功地将Cisco设备返回的、格式复杂的原始文本，解析成了一个清晰易读的Markdown表格，并对整体接口状态进行了总结。这极大地提高了信息的可读性和运维效率。</p>
+<h3 id="3-2-上下文关联与多步任务执行"><a href="#3-2-上下文关联与多步任务执行" class="headerlink" title="3.2 上下文关联与多步任务执行"></a>3.2 上下文关联与多步任务执行</h3><p>真实的运维任务往往不是单步完成的。我们测试AI是否具备将多步操作关联起来，并根据上一步的结果执行下一步操作的“智能代理（Agent）”能力。</p>
+<p><strong>我的指令:</strong></p>
+<blockquote>
+<p>做得很好。请继续在 <code>my-core-switch</code> 上操作。首先，找到 <code>VLAN 10</code> 属于哪些端口；然后，检查这些端口的详细运行配置。</p>
+</blockquote>
+<p><img src="/images/cisco2.1.png" alt="cisco2.1"><br><img src="/images/cisco2.2.png" alt="cisco2.2"></p>
+<p><strong>AI的执行与分析:</strong><br><em>(AI首先执行 <code>show vlan id 10</code>)</em></p>
+<blockquote>
+<p>我已在设备 <strong>my-core-switch</strong> 上执行了 <code>show vlan id 10</code> 命令，并找到了属于 VLAN 10 的端口如下：</p>
+<table>
+<thead>
+<tr>
+<th>VLAN ID</th>
+<th>名称</th>
+<th>类型</th>
+<th>状态</th>
+<th>端口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>Marketing</td>
+<td>access</td>
+<td>active</td>
+<td>GigabitEthernet2&#x2F;0&#x2F;5-7</td>
+</tr>
+</tbody></table>
+<p><strong>进一步操作：</strong><br>针对上述端口，我将依次执行 <code>show running-config interface [端口名]</code> 命令…</p>
+</blockquote>
+<p><em>(AI随后自主地对 Gi2&#x2F;0&#x2F;5, Gi2&#x2F;0&#x2F;6, Gi2&#x2F;0&#x2F;7 分别执行了 <code>show running-config interface</code>，并将结果汇总如下)</em></p>
+<blockquote>
+<p><strong>汇总所有接口的详细运行配置如下：</strong></p>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>配置详情</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GigabitEthernet2&#x2F;0&#x2F;5</td>
+<td>- 工作模式: Access<br>- 访问 VLAN: 10<br>- 描述: 连接到销售部门工作站<br>- 启用端口快速生成树</td>
+</tr>
+<tr>
+<td>GigabitEthernet2&#x2F;0&#x2F;6</td>
+<td>- 工作模式: Access<br>- 访问 VLAN: 10<br>- 描述: 连接到市场部门工作站<br>- 启用端口快速生成树</td>
+</tr>
+<tr>
+<td>GigabitEthernet2&#x2F;0&#x2F;7</td>
+<td>- 工作模式: Access<br>- 访问 VLAN: 10<br>- 描述: 连接到广告部门工作站<br>- 启用端口快速生成树</td>
+</tr>
+</tbody></table>
+<p><strong>分析与建议：</strong></p>
+<ol>
+<li><strong>接口配置一致性：</strong> 所有接口均配置为 Access 模式，并指向相同的 VLAN ID…</li>
+<li><strong>生成树优化：</strong> 启用了 PortFast 功能，适用于直接连接终端设备的端口…</li>
+<li><strong>安全性建议：</strong> 考虑在关键接口上启用 Port Security…</li>
+</ol>
+</blockquote>
+<p><strong>点评:</strong> 这个案例完美展示了AI的逻辑推理和任务分解能力。它成功地将一个复杂的需求拆解为多个步骤，并且能够将第一步查询到的端口列表（Gi2&#x2F;0&#x2F;5-7）作为第二步查询的输入，最终将分散的信息整合成一份条理清晰的报告。这标志着AI已经从一个简单的命令执行器进化为了具备复杂任务处理能力的智能代理。</p>
+<h3 id="3-3-自动化端到端故障诊断"><a href="#3-3-自动化端到端故障诊断" class="headerlink" title="3.3 自动化端到端故障诊断"></a>3.3 自动化端到端故障诊断</h3><p>这个最终考验模拟了一个最常见的运维场景，旨在检验AI作为智能代理的综合能力：自主规划、多步执行、关联分析并最终给出诊断结论。</p>
+<p><strong>我的指令:</strong></p>
+<blockquote>
+<p>现在是最终考验。我收到一个报告，说连接在 <code>my-core-switch</code> 上的一台服务器失联了，它的MAC地址是 <code>0050.56a6.xxxx</code>。请你作为一名资深网络工程师，自主完成以下故障诊断流程并向我汇报。</p>
+</blockquote>
+<p><img src="/images/cisco3.png" alt="cisco3"></p>
+<p>在向AI发出这个复杂的诊断指令后，其后台日志（如下图所示）为我们揭示了一个极其宝贵、也颇为有趣的细节，让我们得以一窥其工作的内在逻辑。</p>
+<p>我们可以看到，AI并没有像传统脚本一样，一次性盲目地执行完所有预设命令。恰恰相反，它展现了一种严谨的、分步式的<strong>推理-行动-观察”（Reason-Act-Observe, ReAct）</strong> 工作循环。</p>
+<ul>
+<li><strong>第一步：它规划并执行了第一个动作</strong>——定位MAC地址。然后，它并没有立刻进行下一步，而是在日志中留下了一句类似“自言自语”的备注：<em>“请提供上述工具调用的结果，以便我继续完成后续的故障诊断步骤。”</em></li>
+<li><strong>第二步：只有当它“观察”到了第一步的确切结果后</strong>（即MAC地址在Gi2&#x2F;0&#x2F;24上），它才基于这个<strong>新的事实</strong>，去规划并执行第二个动作——检查Gi2&#x2F;0&#x2F;24的接口状态。</li>
+</ul>
+<p><strong>这正是智能代理（Agent）与自动化脚本的根本区别：</strong></p>
+<ul>
+<li>脚本是<strong>预设路径</strong>的执行者，无论中途发生什么，它都会尝试走完所有流程。</li>
+<li>而AI Agent是<strong>基于事实</strong>的决策者。它每一步的行动，都依赖于上一步的观察结果。如果第一步发现MAC地址在另一个端口，它后续的所有操作都会自动调整到那个正确的端口上。这种<strong>基于上下文的动态适应能力</strong>，是其能够处理复杂、未知问题的核心。</li>
+</ul>
+<p>因此，这段看似“卡住”的日志，实际上是AI在向我们展示其严谨的思考过程。它让我们不再将AI视为一个深不可测的“黑箱”，而是能够理解其决策逻辑、值得信赖的合作伙伴。</p>
+<p><strong>AI的执行与分析报告:</strong><br><em>(AI自主地将任务分解为多个步骤，依次调用工具，并最终整合成了以下这份专业的诊断报告)</em></p>
+<blockquote>
+<h1 id="故障诊断报告"><a href="#故障诊断报告" class="headerlink" title="故障诊断报告"></a>故障诊断报告</h1><p><strong>日期时间</strong>: 2025&#x2F;7&#x2F;11 14:25:16<br><strong>操作人员</strong>: wiz<br><strong>设备</strong>: my-core-switch</p>
+<p><strong>故障描述</strong>: 连接在 <strong>my-core-switch</strong> 上的一台服务器失联，其 MAC 地址为 <strong>0050.56a6.xxxx</strong>。</p>
+<hr>
+<h2 id="1-定位-MAC-地址所在的物理端口"><a href="#1-定位-MAC-地址所在的物理端口" class="headerlink" title="1. 定位 MAC 地址所在的物理端口"></a>1. 定位 MAC 地址所在的物理端口</h2><p><strong>执行命令</strong>: <code>show mac address-table | include 0050.56a6.xxxx</code><br><strong>发现</strong>: MAC 地址 <code>0050.56a6.xxxx</code> 位于端口 <strong>GigabitEthernet2&#x2F;0&#x2F;24</strong>，所属 VLAN 为 <strong>22</strong>。</p>
+<hr>
+<h2 id="2-检查端口-GigabitEthernet2-0-24-的接口状态和错误计数器"><a href="#2-检查端口-GigabitEthernet2-0-24-的接口状态和错误计数器" class="headerlink" title="2. 检查端口 GigabitEthernet2&#x2F;0&#x2F;24 的接口状态和错误计数器"></a>2. 检查端口 GigabitEthernet2&#x2F;0&#x2F;24 的接口状态和错误计数器</h2><p><strong>执行命令</strong>: <code>show interface GigabitEthernet2/0/24</code><br><strong>发现</strong>: 接口状态为 <strong>up&#x2F;up (connected)</strong>，输入&#x2F;输出错误计数器均为 <strong>0</strong>。物理层和数据链路层连接正常。</p>
+<hr>
+<h2 id="3-检查VLAN-22的三层接口（SVI）是否正常工作"><a href="#3-检查VLAN-22的三层接口（SVI）是否正常工作" class="headerlink" title="3. 检查VLAN 22的三层接口（SVI）是否正常工作"></a>3. 检查VLAN 22的三层接口（SVI）是否正常工作</h2><p><strong>执行命令</strong>: <code>show interface vlan22</code><br><strong>发现</strong>: <strong>Vlan22</strong> 的三层接口状态为 <strong>up&#x2F;up</strong>，IP地址配置为 <code>192.168.22.xxx/xx</code>，运行正常。</p>
+<hr>
+<h2 id="4-最终诊断结论"><a href="#4-最终诊断结论" class="headerlink" title="4. 最终诊断结论"></a>4. 最终诊断结论</h2><p>经过详细的故障诊断，<strong>my-core-switch</strong> 上的端口 <strong>Gi2&#x2F;0&#x2F;24</strong> 和对应的 <strong>Vlan22</strong> 三层接口均运行正常，未检测到交换机层面的错误。因此，服务器失联的问题<strong>极大概率并非由本交换机引起</strong>。</p>
+<p><strong>可能的根本原因指向</strong>:</p>
+<ul>
+<li><strong>服务器本身</strong>: 操作系统故障、网卡驱动问题或网络配置错误。</li>
+<li><strong>IP 地址冲突</strong>: 服务器的IP地址可能与网络中其他设备冲突。</li>
+<li><strong>上游&#x2F;下游网络策略</strong>: 可能存在防火墙或路由器的ACL策略阻止了服务器的通信。</li>
+</ul>
+<p><strong>建议的下一步排查步骤</strong>:</p>
+<ol>
+<li><strong>检查服务器状态</strong>: 确认服务器系统、服务及网络配置（IP、网关、DNS）。</li>
+<li><strong>验证IP地址冲突</strong>: 在交换机上使用 <code>show arp | include [服务器IP]</code> 检查ARP映射。</li>
+<li><strong>测试端到端连通性</strong>: 从同一VLAN内的其他设备Ping服务器，以及从服务器Ping其网关(<code>192.168.22.xxx</code>)。</li>
+<li><strong>物理介质检查</strong>: 考虑更换网线或服务器网卡。<br>…</li>
+</ol>
+</blockquote>
+<p><strong>点评:</strong> 这份报告完美展现了AIOps的巅峰潜力。AI不仅像一个真人专家一样，有条不紊地完成了所有排查步骤，更重要的是，在排除了自身管辖范围内的故障后，它没有止步，而是给出了逻辑严谨的诊断结论和一份极其专业、可执行的跨领域排查指南。这标志着它已经从一个“网络运维工具”进化为了一个具备全局视野的“<strong>智能故障协调中心</strong>”。</p>
+<h3 id="3-4-复杂任务下的深度思考能力对决"><a href="#3-4-复杂任务下的深度思考能力对决" class="headerlink" title="3.4 复杂任务下的深度思考能力对决"></a>3.4 复杂任务下的深度思考能力对决</h3><p>为了进一步探究不同AI模型在复杂、多步任务下的表现差异，我们设计了一项综合性更强的“系统健康检查”任务，并将其同时交给了我们之前使用的O1-mini模型和另一款国产AI模型DeepSeek-R1。这项任务要求AI自主执行四项关联性不高的检查，并汇总成一份报告，旨在考验其任务规划、并行处理和深度分析能力。</p>
+<p><strong>我的指令:</strong></p>
+<blockquote>
+<p>请对 <code>my-core-switch</code> 进行一次全面的系统健康检查。我需要你检查并汇总以下四个方面的情况，并给我一个最终的摘要报告：</p>
+<ol>
+<li>CPU利用率（过去5分钟）。</li>
+<li>内存使用情况（Processor和I&#x2F;O内存）。</li>
+<li>所有物理接口的错误计数器总和。</li>
+<li>最新的10条日志信息。</li>
+</ol>
+</blockquote>
+<h4 id="O1-mini-的表现：机械化的串行执行者"><a href="#O1-mini-的表现：机械化的串行执行者" class="headerlink" title="O1-mini 的表现：机械化的串行执行者"></a>O1-mini 的表现：机械化的串行执行者</h4><p>O1-mini模型在处理这个任务时，表现得像一个线性的自动化脚本。它开始执行第一个CPU检查任务，并成功返回了结果。然而，在执行第二个“内存检查”任务时，由于<code>show memory</code>命令返回内容过多导致工具超时，它报告了一个连接错误。</p>
+<p><strong>致命缺陷：</strong> 在遇到这一个子任务的失败后，O1-mini<strong>中止了整个健康检查流程</strong>，直接放弃了后续的“接口错误检查”和“日志检查”。最终，它只完成了一份25%进度的、残缺的报告，并将所有问题归咎于一个它未能深入分析的“连接错误”。</p>
+<p><img src="/images/O1%E6%83%9C%E8%B4%A5.png" alt="o1没能胜任"></p>
+<p><strong>结论：</strong> O1-mini能够机械化地完成基础、独立的任务。也具备一定的反复试错的能力，但面对复杂的、多步骤的综合性任务时，它的处理逻辑是脆弱的、串行的。任何一个环节的失败都会导致整个任务链的中断，缺乏应对复杂现实世界问题的鲁棒性。</p>
+<h4 id="DeepSeek-R1-的表现：具备深度思考的智能分析师"><a href="#DeepSeek-R1-的表现：具备深度思考的智能分析师" class="headerlink" title="DeepSeek-R1 的表现：具备深度思考的智能分析师"></a>DeepSeek-R1 的表现：具备深度思考的智能分析师</h4><p>与O1-mini形成鲜明对比的是，DeepSeek-R1展现出了惊人的智能和深度。它似乎在内部将四项检查分解为独立的子任务，并成功地完成了所有指令，即使遇到问题也会不断地反复去试错，虽然完成时间上因为长思考的原因会更久，但最终能呈现一份堪称典范的健康报告。</p>
+<p><strong>DeepSeek-R1的诊断报告摘要:</strong></p>
+<blockquote>
+<h3 id="系统健康检查报告：my-core-switch"><a href="#系统健康检查报告：my-core-switch" class="headerlink" title="系统健康检查报告：my-core-switch"></a>系统健康检查报告：my-core-switch</h3><h4 id="1-CPU利用率（过去5分钟）"><a href="#1-CPU利用率（过去5分钟）" class="headerlink" title="1. CPU利用率（过去5分钟）"></a>1. CPU利用率（过去5分钟）</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">| 时间范围      | 利用率 | 状态评估 |</span><br><span class="line">|---------------|--------|----------|</span><br><span class="line">| 5分钟平均     | 4%     | 低负载   |</span><br></pre></td></tr></table></figure>
+<p><strong>分析</strong>：CPU利用率处于健康范围，控制平面处理能力充足。</p>
+<h4 id="2-内存使用情况"><a href="#2-内存使用情况" class="headerlink" title="2. 内存使用情况"></a>2. 内存使用情况</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">| 内存类型      | 使用率 |</span><br><span class="line">|---------------|--------|</span><br><span class="line">| Processor     | 9.67%  |</span><br><span class="line">| I/O           | 0.69%  |</span><br></pre></td></tr></table></figure>
+<p><strong>分析</strong>：内存使用率极低，无内存压力。</p>
+<h4 id="3-物理接口错误计数器"><a href="#3-物理接口错误计数器" class="headerlink" title="3. 物理接口错误计数器"></a>3. 物理接口错误计数器</h4><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">| 错误类型         | 总计数 |</span><br><span class="line">|------------------|--------|</span><br><span class="line">| 输入错误         | 0      |</span><br><span class="line">| 输出错误         | 0      |</span><br><span class="line">| ... (所有错误均为0) ...|</span><br></pre></td></tr></table></figure>
+<p><strong>分析</strong>：全接口错误计数器为零，表明物理层与数据链路层无传输错误。</p>
+<h4 id="4-最新10条系统日志"><a href="#4-最新10条系统日志" class="headerlink" title="4. 最新10条系统日志"></a>4. 最新10条系统日志</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">2. Jun 12 10:23:46.456: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/3, changed state to down</span><br><span class="line">...</span><br><span class="line">9. Jun 12 10:45:40.666: %LINK-5-CHANGED: Interface GigabitEthernet0/1, changed state to administratively down</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><strong>关键日志分析</strong>：</p>
+<ol>
+<li>G0&#x2F;3接口持续存在协议层故障。</li>
+<li>G0&#x2F;1接口被管理关闭。</li>
+</ol>
+<hr>
+<h3 id="最终健康评估摘要"><a href="#最终健康评估摘要" class="headerlink" title="最终健康评估摘要"></a>最终健康评估摘要</h3><table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>状态</th>
+<th>风险等级</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU负载</td>
+<td>正常</td>
+<td>低</td>
+<td>无需干预</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>优秀</td>
+<td>无风险</td>
+<td>持续监控</td>
+</tr>
+<tr>
+<td>接口错误</td>
+<td>完美</td>
+<td>无风险</td>
+<td>保持当前状态</td>
+</tr>
+<tr>
+<td>日志事件</td>
+<td><strong>注意</strong></td>
+<td><strong>中</strong></td>
+<td><strong>需处理G0&#x2F;3协议故障</strong></td>
+</tr>
+</tbody></table>
+<p><strong>综合结论</strong>：<br>设备整体健康状态<strong>优秀</strong>，但需重点关注G0&#x2F;3接口的协议层故障。</p>
+<p><strong>建议行动</strong>：</p>
+<ol>
+<li>立即解决G0&#x2F;3协商问题（强制速率&#x2F;双工）。</li>
+<li>确认G0&#x2F;1关闭是否属于计划维护。</li>
+</ol>
+</blockquote>
+<p><strong>点评：</strong> 这份报告的含金量极高。DeepSeek-R1不仅完整地执行了所有任务，更展现了几个关键的“智能”特质：</p>
+<ol>
+<li><strong>数据聚合与定性分析</strong>：它没有罗列枯燥的数字，而是给出了“低负载”、“优秀”等定性判断。</li>
+<li><strong>上下文关联</strong>：它能从最新的日志中，关联到我们之前排查过的G0&#x2F;3端口问题，显示了强大的上下文记忆和分析能力。</li>
+<li><strong>风险评估与决策</strong>：最终的“摘要”表格一目了然地指出了风险等级，并给出了具体、可行的“建议行动”，这已经超越了“报告”，进入了“决策支持”的范畴。</li>
+</ol>
+<p><img src="/images/deepseek%E5%8F%8D%E5%A4%8D.png" alt="deepseek在烧烤"><br><img src="/images/deepseek%E7%BB%93%E6%9E%9C.png" alt="deepseek结果"></p>
+<p><strong>对决结论：</strong><br>通过这次对比，我们可以得出一个清晰的结论：在处理需要<strong>深度思考、多步推理和综合判断的复杂问题</strong>时，以<strong>DeepSeek-R1为代表的国产AI</strong>展现出了远超普通模型的强大能力。它不再是一个简单的任务执行工具，而更像一个能够独立思考、规划并解决问题的“AI专家”。而O1-mini等模型，在现阶段则更适合执行明确、单一的基础自动化任务。这也为我们未来的AIOps实践指明了方向：选择合适的AI模型，是决定项目成败和智能深度的关键所在。</p>
+<h2 id="四、未来方向：MCP的星辰大海"><a href="#四、未来方向：MCP的星辰大海" class="headerlink" title="四、未来方向：MCP的星辰大海"></a>四、未来方向：MCP的星辰大海</h2><p>本次实践成功地将AI转变为一个Cisco网络专家，但这仅仅是冰山一角。MCP协议与大模型的结合，正为AIOps开启一扇通往未来的大门。</p>
+<ol>
+<li><p><strong>从“被动响应”到“主动防御”：意图驱动的AIOps</strong><br>未来的MCP服务将不再仅仅是执行命令的工具。我们可以构建一个“网络意图MCP服务”。运维人员不再说“把G1&#x2F;0&#x2F;5端口划入VLAN 10”，而是陈述最终意图：“<strong>确保新来的市场部员工PC能访问内网文件服务器和外网</strong>”。AI会自己去规划需要配置哪个交换机、哪个端口、哪个VLAN、哪条ACL，生成完整的配置脚本，并在“沙箱”中验证无误后，待审批执行。这是一种更高维度的自动化。</p>
+</li>
+<li><p><strong>融合多模态：迈向真正的“数字孪生”</strong><br>正如马斯克的Grok-4所展示的趋势，未来的模型将是多模态的。我们的<code>cisco-mcp</code>可以与<code>fortigate-mcp</code>（用于绘制拓扑图）等服务进行<strong>联动</strong>。当诊断故障时，AI不仅能返回文本报告，还能<strong>实时地在高亮显示故障路径的网络拓扑图上进行标注</strong>，甚至结合摄像头的视频流（例如机房摄像头MCP）来判断“端口灯不亮”这种物理问题。这使得运维从“看命令行”进化到“看数字孪生驾驶舱”。</p>
+</li>
+<li><p><strong>AI Agent集群与分布式决策</strong><br>我们可以为网络、服务器、数据库、应用程序各部署一个专精的AI Agent（MCP服务）。当出现“应用访问缓慢”这种复杂问题时，应用AI会首先自检，然后向网络AI发出请求：“请检查从我到数据库服务器<code>10.1.1.5</code>的网络延迟和丢包率”。网络AI完成检查后，可能会再向服务器AI发出请求：“请检查<code>10.1.1.5</code>的CPU和磁盘I&#x2F;O”。这些AI Agent组成一个<strong>分布式的智能诊断集群</strong>，通过MCP协议互相协作，在数秒内完成跨多个技术领域的复杂故障定位，这是任何单一的人类专家都难以企及的效率。</p>
+</li>
+</ol>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>从一个简单的<code>show version</code>命令，到一个全自动的故障诊断报告，我们见证了MCP协议与高阶提示词工程相结合所爆发出的巨大能量。AIOps不再是遥远的概念，它正通过像<code>cisco-mcp</code>这样的实践，具体而微地改变着我们的工作方式。未来已来，而我们每个人，都有机会成为这场智能变革的构建者。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.grokfree.xyz/2025/07/11/telnet%E4%BA%A4%E6%8D%A2%E6%9C%BAmcp/" data-id="cmd2g731l000essveaxwjhtia" data-title="从命令行到认知智能：基于cisco-mcp的AIOps深度实践" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AIOps/" rel="tag">AIOps</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cisco/" rel="tag">Cisco</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/" rel="tag">提示词工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" rel="tag">网络运维</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2025/07/10/ssh%E9%98%B2%E7%81%AB%E5%A2%99mcp/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">只要5秒？AI画出整个公司网络！这不再是科幻！</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">技术实践</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/AIOps/">AIOps</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AIOps/" rel="tag">AIOps</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cisco/" rel="tag">Cisco</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FortiGate/" rel="tag">FortiGate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCP%E5%8D%8F%E8%AE%AE/" rel="tag">MCP协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag">大语言模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/" rel="tag">提示词工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" rel="tag">网络运维</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AIOps/" style="font-size: 20px;">AIOps</a> <a href="/tags/Cisco/" style="font-size: 10px;">Cisco</a> <a href="/tags/FortiGate/" style="font-size: 10px;">FortiGate</a> <a href="/tags/LLM/" style="font-size: 10px;">LLM</a> <a href="/tags/MCP%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">MCP协议</a> <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大语言模型</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示词工程</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" style="font-size: 20px;">网络运维</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/11/telnet%E4%BA%A4%E6%8D%A2%E6%9C%BAmcp/">从命令行到认知智能：基于cisco-mcp的AIOps深度实践</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/10/ssh%E9%98%B2%E7%81%AB%E5%A2%99mcp/">只要5秒？AI画出整个公司网络！这不再是科幻！</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/08/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 Zachary<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
