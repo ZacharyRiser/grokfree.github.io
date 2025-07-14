@@ -8,12 +8,12 @@ subtitle: ''
 description: ''
 keywords:
 author: Zachary
-language: en
+language: zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://www.grokfree.xyz
+url: https://grokfree.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -104,3 +104,12 @@ deploy:
   type: git
   repo: https://github.com/ZacharyRiser/ZacharyRiser.github.io.git
   branch: master
+
+
+# Feed Atom
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content: true

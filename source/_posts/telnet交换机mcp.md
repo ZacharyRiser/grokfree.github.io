@@ -11,6 +11,8 @@ tags:
 categories:
   - 技术实践
   - AIOps
+photos:
+  - /images/titu/交换机mcp.png
 ---
 
 基于前一次的实践，这次的cisco交换机ai也能绘制出以交换机为中心的网络拓扑图！

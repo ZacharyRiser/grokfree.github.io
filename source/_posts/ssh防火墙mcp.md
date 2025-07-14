@@ -9,6 +9,8 @@ tags:
   - 网络运维
 categories:
   - 技术实践
+photos:
+  - /images/titu/防火墙mcp.png
 ---
 
 基于MCP协议的AIOps实践：大语言模型与FortiGate防火墙的深度整合

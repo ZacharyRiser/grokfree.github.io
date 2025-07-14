@@ -1344,3 +1344,17 @@ pre .javascript .function {
   margin-right: 5px;
   display: inline-block;
 }
+.article-gallery {
+  /* 让图片容器居中 */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* 图片和下方内容的间距 */
+}
+
+.article-gallery .article-photo {
+  max-width: 250px; /* 设置图片最大宽度，可以自己修改 */
+  width: 50%;      /* 宽度自适应，但不会超过最大值 */
+  height: auto;     /* 高度自动，防止图片变形 */
+  border-radius: 8px; /* 给图片加个圆角 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 加个阴影，更有质感 */
+}

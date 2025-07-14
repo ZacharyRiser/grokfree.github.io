@@ -9,6 +9,8 @@ tags:
   - CLI
 categories:
   - '效率工具'
+photos:
+  - /images/titu/gemini.png
 ---
 
 
