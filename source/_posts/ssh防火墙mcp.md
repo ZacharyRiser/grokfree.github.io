@@ -11,7 +11,7 @@ categories:
   - 技术实践
 ---
 
-# 基于MCP协议的AIOps实践：大语言模型与FortiGate防火墙的深度整合
+基于MCP协议的AIOps实践：大语言模型与FortiGate防火墙的深度整合
 
 随着大语言模型（LLM）在各个领域的渗透，将其强大的认知与推理能力应用于传统的网络运维（NetOps）领域，即 AIOps，已成为业界探索的前沿方向。
 <!-- more -->
